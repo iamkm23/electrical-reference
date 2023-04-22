@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transformer Fault Current Calculator || by KMO</title>
+    <script>
+      MathJax = {
+        loader: {
+          load: ["input/tex", "output/chtml", "ui/lazy"],
+        },
+        tex: {
+          packages: ["base", "ams"],
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"
+    ></script>
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    /> -->
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      form {
+        width: 90vw;
+        max-width: 100%;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+      .form-group {
+        padding: 0.85rem 0;
+      }
+      label {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+      input {
+        width: 100%;
+        height: 40px;
+        padding: 0 1rem;
+        border: 1px solid black;
+        border-radius: 5px;
+        font-size: 0.85rem;
+      }
+
+      article {
+        padding: 0.8rem;
+      }
+
+      .btn-calculate {
+        padding: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        background-color: #0088cc;
+        border: none;
+        color: white;
+        border-radius: 0.2rem;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      .btn-calculate:hover {
+        box-shadow: 1px 1px #888888;
+      }
+      span {
+        font-weight: 700;
+        text-transform: capitalize;
+      }
+      .render {
+        width: 90vw;
+        max-width: 100%;
+        border: 1px solid rgb(20, 20, 107);
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+
+      @media screen and (min-width: 576px) {
+        input {
+          width: 100%;
+        }
+
+        .btn-calculate {
+          width: 100%;
+        }
+
+        .form {
+          width: 400px;
+        }
+
+        .render {
+          width: 400px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="section section-center">
+      <h3>transformer short curcuit fault current calculator</h3>
+      <p>
+        Calculates the short circuit fault current level of a 3-phase, core type
+        transformer with a Dyn winding connection.
+      </p>
+    </section>
+
+    <!-- form -->
+    <section class="section-center">
+      <form class="form">
+        <div class="form-group">
+          <label for="trf-rating">Transformer Rating (kVA)</label>
+          <input
+            type="number"
+            value="1000"
+            name="trf-rating"
+            class="trf-rating"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="trf-sec-voltage">Transformer Secondary Voltage (V)</label>
+          <input
+            type="number"
+            value="415"
+            name="trf-sec-voltage"
+            class="trf-sec-voltage"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="impedance">Transformer Impedance (%)</label>
+          <input
+            type="number"
+            value="5"
+            name="impedance"
+            class="trf-impedance"
+          />
+        </div>
+        <button type="submit" class="btn-calculate">Calculate</button>
+      </form>
+    </section>
+    <!-- end of form -->
+
+    <!-- result -->
+    <section class="result section-center"></section>
+    <!-- end of result -->
+
+    <section class="section section-center">
+      <h4>transformer fault current caculator parameters</h4>
+
+      <p><span># transformer rating (S): </span>Rating in kVA</p>
+      <p>
+        <span># voltage rating (V,line to line): </span>line-to-line voltage
+        rating of the secondary windings in volts
+      </p>
+      <p>
+        <span># impedance (Z%): </span>per-unit impedance of the transformer in
+        percentage. The value can be found on the name plate.
+      </p>
+    </section>
+
+    <section class="section-center">
+      <h4>infinite bus assumption</h4>
+      <p>
+        The transformer fault level calculator assumes that the transformer is
+        supplied from an infinite bus.
+      </p>
+      <p>
+        This means, the fault level on the primary side of the transformer is
+        considered to be infinite.
+      </p>
+      <p>
+        This assumption will give the worse case fault level on the secondary
+        side of the transformer, which is sufficient for sizing of equipment
+        according to fault rating.
+      </p>
+      <p>However, this assumption is not reliable for the folllowing:</p>
+      <li style="margin-left: 1rem">Earth loop impedance calculations.</li>
+      <li style="margin-left: 1rem">Protection grading calculations.</li>
+      <li style="margin-left: 1rem">Motor start-up calculation</li>
+    </section>
+
+    <!-- table -->
+    <section class="section section-center">
+      <h4>How to calculate transformer short circuit current?</h4>
+      <table class="generalTable" id="equationTable1">
+        <tr>
+          <td>Three-phase fault</td>
+          <td>\(I_{3p}= \dfrac{S}{\sqrt{3} \times V_{LL} \times Z_{1}}\)</td>
+        </tr>
+        <tr>
+          <td>Phase-to-phase fault</td>
+          <td>
+            \(I_{pp}= \dfrac{S}{ V_{LL} \cdot \left( Z_{1} + Z_{2} \right) }\)
+          </td>
+        </tr>
+        <tr>
+          <td>Phase-to-neutral fault</td>
+          <td>
+            \(I_{pn}= \dfrac{3 \cdot S}{\sqrt{3} \cdot V_{LL} \cdot \left( Z_{0}
+            + Z_{1} + Z_{2} \right) }\)
+          </td>
+        </tr>
+        <tr>
+          <td>Phase-to-earth fault</td>
+          <td>
+            \(I_{pe}= \dfrac{3 \cdot S}{\sqrt{3} \cdot V_{LL} \cdot \left( Z_{0}
+            + Z_{1} + Z_{2} \right) }\)
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            Where, Z<sub>0</sub>, Z<sub>1</sub>, and Z<sub>2</sub> are the zero,
+            positive and negative sequence impedances.
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const form = document.querySelector(".form");
+      const result = document.querySelector(".result");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        result.style.display = "block";
+
+        const power = getFormData().power;
+        const voltage = getFormData().voltage;
+        const z1 = getFormData().impedance / 100;
+        const z2 = z1;
+        const z0 = 0.85 * z1;
+
+        const faultCurrent = getFaultCurrent(power, voltage, z0, z1, z2);
+
+        result.innerHTML = `
+            <section class='section section-center'>
+                <article class = 'render'>
+                    <article><span>Three Phase Fault Current: </span> ${faultCurrent.threePhaseFaultCurrent.toFixed(
+                      2
+                    )}kA</article>
+        
+                    <article><span>Phase to Phase Fault Current: </span> ${faultCurrent.phaseToPhaseFaultCurrent.toFixed(
+                      2
+                    )}kA</article>
+        
+                    <article><span>Phase to Neutral Fault Current: </span> ${faultCurrent.phaseToNeutralFaultCurrent.toFixed(
+                      2
+                    )}kA</article>
+        
+                    <article><span>Phase to Earth Fault Current: </span> ${faultCurrent.phaseToEarthFaultCurrent.toFixed(
+                      2
+                    )}kA</article>
+                </article>               
+            </section>
+        `;
+      });
+
+      function getFaultCurrent(power, voltage, z0, z1, z2) {
+        const threePhaseFaultCurrent = power / (1.732 * voltage * z1);
+
+        const phaseToPhaseFaultCurrent = power / (voltage * (z1 + z2));
+
+        const phaseToNeutralFaultCurrent =
+          (3 * power) / (1.732 * voltage * (z1 + z2 + z0));
+
+        const phaseToEarthFaultCurrent =
+          (3 * power) / (1.732 * voltage * (z1 + z2 + z0));
+
+        return {
+          threePhaseFaultCurrent,
+          phaseToPhaseFaultCurrent,
+          phaseToNeutralFaultCurrent,
+          phaseToEarthFaultCurrent,
+        };
+      }
+
+      function getFormData() {
+        // get transformer rating
+        let trfRating = parseInt(document.querySelector(".trf-rating").value);
+
+        // get transformer rating
+        let trfSecVoltage = parseInt(
+          document.querySelector(".trf-sec-voltage").value
+        );
+
+        // get transformer rating
+        let trfImpedance = parseInt(
+          document.querySelector(".trf-impedance").value
+        );
+
+        return {
+          power: trfRating,
+          voltage: trfSecVoltage,
+          impedance: trfImpedance,
+        };
+      }
+      // end of group of function
+    </script>
+    <script src="../data/cable.js"></script>
+  </body>
+</html>

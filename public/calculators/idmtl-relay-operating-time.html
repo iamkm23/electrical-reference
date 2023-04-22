@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    /> -->
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <style>
+      form {
+        width: 100%;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+      .form-group {
+        margin: 0.5rem;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+
+      input,
+      select {
+        width: 100%;
+        height: 35px;
+        border-radius: 0.5rem;
+        border: 1px solid black;
+        padding-left: 0.5rem;
+      }
+
+      .btn-calculate {
+        padding: 0.5rem;
+        margin-top: 1rem;
+        background-color: #0088cc;
+        border: none;
+        color: white;
+        border-radius: 0.2rem;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      .btn-calculate:hover {
+        box-shadow: 1px 1px #888888;
+      }
+
+      #result {
+        margin-top: 1rem;
+        width: 100%;
+      }
+
+      @media screen and (min-width: 576px) {
+        form {
+          width: 400px;
+        }
+        #result {
+          width: 90vw;
+        }
+
+        #result {
+          margin-top: 1rem;
+          width: 400px;
+        }
+      }
+    </style>
+
+    <title>IDMTL Relay Calculator</title>
+  </head>
+  <body>
+    <section class="section section-center">
+      <h3>IDMTL RELAY TRIPPING TIME CALCULATOR</h3>
+      <p>
+        The Inverse Time Over Current (TOC/IDMT) relay trip time calculator
+        calculates the protection trip time according to IEC 60255 and IEEE
+        C37.112-1996 protection curves.
+      </p>
+    </section>
+
+    <section class="section-center">
+      <div class="grid-container">
+        <div class="" id="calculation-form">
+          <form>
+            <!-- TRIPPING CURVE -->
+            <div class="form-group">
+              <label for="trip-curve" class="form-label"
+                ><b>Trip Curve</b></label
+              >
+              <select class="form-select" id="trip-curve" name="trip-curve">
+                <!-- <option selected>Select the Transformer Rating</option> -->
+                <option value="IEC-SI" selected>
+                  IEC 60255 Standard Inverse
+                </option>
+                <option value="IEC-VI">IEC 60255 Very Inverse</option>
+                <option value="IEC-EI">IEC 60255 Extremely Inverse</option>
+                <option value="IEC-LT">IEC 60255 Long Time Inverse</option>
+                <option value="IEEE-MI">IEEE Moderately Inverse</option>
+                <option value="IEEE-VI">IEEE Very Inverse</option>
+                <option value="IEEE-EI">IEEE Extremely Inverse</option>
+              </select>
+            </div>
+            <!-- END OF TRIPPING CURVE -->
+
+            <!-- RELAY PICK UP CRRENT -->
+            <div class="form-group">
+              <label for="" class="form-label"
+                ><b>Relay Pick Up Current</b></label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="relay-pickup-current"
+                value="100"
+              />
+            </div>
+            <!-- END OF RELAY PICK UP CURRENT -->
+
+            <!-- FAULT CRRENT -->
+            <div class="form-group">
+              <label for="" class="form-label"><b>Fault Current</b></label>
+              <input
+                type="number"
+                class="form-control"
+                id="fault-current"
+                value="200"
+              />
+            </div>
+            <!-- END OF FAULT CURRENT -->
+
+            <!-- TMS/TD -->
+            <div class="form-group">
+              <label for="" class="form-label changeTD"
+                ><b>Time Multiplier Setting (TMS)</b></label
+              >
+              <input type="number" class="form-control" id="tms" value="0.1" />
+            </div>
+            <!-- END OF TMS/TD -->
+
+            <!-- CALCULATE BUTTON -->
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn-calculate mb-3"
+                onclick="calculate()"
+              >
+                Calculate
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- END OF CALCULATE FORM -->
+
+        <div class="" id="result">
+          <!-- render by js -->
+        </div>
+      </div>
+
+      <!-- <article>
+        <h3>Parameters</h3>
+        <li>Trip Curve - Select from the standard set of IEC curves</li>
+      </article> -->
+    </section>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // select dropdown list to listen on change event
+      const dropDownTripCurve = document.querySelector("#trip-curve");
+
+      const changeTD = document.querySelector(".changeTD");
+
+      // listen change event when dropdwon list value is change
+      dropDownTripCurve.addEventListener("change", (e) => {
+        // e.target.value.split("-")[0], return "IEC or IEEE"
+        let IECorIEEE = e.target.value.split("-")[0];
+        console.log(IECorIEEE);
+        if (IECorIEEE == "IEEE") {
+          changeTD.innerHTML = "<b>Time Dial (TD)</b>";
+        } else {
+          changeTD.innerHTML = "<b>Time Multiplier Setting (TMS)</b>";
+        }
+      });
+
+      function calculate() {
+        // get data from form as an object
+        let data = getFormData();
+        console.log(data);
+
+        const operatingTime = getOperatingTime(
+          data.tripCurve,
+          data.relayPickUpCurrent,
+          data.faultCurrent,
+          data.tms
+        );
+
+        // RENDER IN HTML
+        // render full load current
+        document.getElementById("result").innerHTML = `
+        <h5>Relay Operating Time Under Following Condition</h5>
+        <li>Trip Curve - <b>${data.tripCurve}</b></li>
+        <li>Relay Setting - <b>${data.relayPickUpCurrent}A</b></li>
+        <li>Fault Current - <b>${data.faultCurrent}A</b></li>
+        <li><span class="TMS-TD">TMS -</span> <b>${data.tms}</b></li></br>
+        <p><mark>Relay Operating Time is ${operatingTime.toFixed(
+          2
+        )} sec</mark></p>
+          `;
+
+        // Change TMS or TD based on curve selected, in the result
+        if (data.tripCurve.split("-")[0] == "IEEE") {
+          document.querySelector(".TMS-TD").innerHTML = "TD -";
+        }
+
+        // change css properties
+        let selectResultID = document.querySelectorAll("#result");
+
+        // console.log(selectResultID);
+        selectResultID.forEach((element) => showResult(element));
+
+        function showResult(element) {
+          element.style.padding = "20px";
+          element.style.borderRadius = "10px";
+          element.style.color = "#3E5E66";
+          element.style.border = "1px solid #3E5E66";
+          // element.style.color = "#00008b";
+        }
+      }
+
+      function getOperatingTime(
+        tripCurve,
+        relayPickUpCurrent,
+        faultCurrent,
+        tms
+      ) {
+        // IEC k const value
+        const k = {
+          "IEC-SI": 0.14,
+          "IEC-VI": 13.5,
+          "IEC-EI": 80,
+          "IEC-LT": 120,
+        };
+
+        // IEC alpha value
+        const alpha = {
+          "IEC-SI": 0.02,
+          "IEC-VI": 1,
+          "IEC-EI": 2,
+          "IEC-LT": 1,
+        };
+
+        // IEE A value
+        const A = {
+          "IEEE-MI": 0.0515,
+          "IEEE-VI": 19.61,
+          "IEEE-EI": 28.2,
+        };
+
+        // IEE B value
+        const B = {
+          "IEEE-MI": 0.114,
+          "IEEE-VI": 0.491,
+          "IEEE-EI": 0.1217,
+        };
+
+        // IEE p value
+        const p = {
+          "IEEE-MI": 0.02,
+          "IEEE-VI": 2,
+          "IEEE-EI": 2,
+        };
+
+        const psm = faultCurrent / relayPickUpCurrent;
+
+        if (
+          tripCurve === "IEC-SI" ||
+          tripCurve === "IEC-VI" ||
+          tripCurve === "IEC-EI" ||
+          tripCurve === "IEC-LT"
+        ) {
+          const kValue = k[tripCurve];
+          const pValue = alpha[tripCurve];
+
+          return tms * ([kValue] / ([psm ** pValue] - 1));
+        } else {
+          const A_value = A[tripCurve];
+          const B_value = B[tripCurve];
+          const pValue = p[tripCurve];
+
+          return tms * [A_value / [psm ** pValue - 1] + B_value];
+        }
+      }
+
+      // TO GET DATA FROM FORM, RETURN AS AN OBJECT
+      function getFormData() {
+        // get trip curve information
+        let tripCurve = document.getElementById("trip-curve").value;
+
+        // get relay pick up current
+        let relayPickUpCurrent = parseInt(
+          document.getElementById("relay-pickup-current").value
+        );
+
+        // get fault current
+        let faultCurrent = parseInt(
+          document.getElementById("fault-current").value
+        );
+
+        // get tms
+        let tms = parseFloat(document.getElementById("tms").value);
+
+        return {
+          tripCurve,
+          relayPickUpCurrent,
+          faultCurrent,
+          tms,
+        };
+      }
+      // end of group of function
+    </script>
+  </body>
+</html>

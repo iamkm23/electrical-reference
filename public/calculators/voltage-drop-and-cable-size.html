@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cable Size & VD Calculator || by KMO</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <style>
+      /*
+      ===========================
+      GRID STYLING
+      ===========================
+       */
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        grid-gap: 0.5rem;
+        grid-template-areas:
+          "form"
+          "show-flc"
+          "show-ampacity"
+          "show-vd"
+          "suggestion";
+      }
+
+      .form-group {
+        margin: 1rem 0px;
+      }
+
+      label {
+        font-weight: 700;
+        display: block;
+      }
+      .form-control,
+      select {
+        width: 100%;
+        height: 35px;
+        padding-left: 1rem;
+        border: 1px solid black;
+        font-size: 0.85rem;
+        border-radius: 5px;
+      }
+
+      .power-factor {
+        display: block;
+      }
+
+      span {
+        background-color: bisque;
+        font-weight: 700;
+      }
+
+      #calculation-form {
+        padding: 20px;
+        grid-area: form;
+        border-radius: 20px;
+        background-color: white;
+      }
+
+      #show-flc {
+        grid-area: show-flc;
+      }
+
+      #show-ampacity {
+        grid-area: show-ampacity;
+      }
+
+      #show-vd {
+        grid-area: show-vd;
+      }
+
+      #suggestion {
+        grid-area: suggestion;
+      }
+
+      /*
+      ===========================
+      END OF GRID STYLING
+      ===========================
+      */
+
+      article {
+        padding-bottom: 0.5rem;
+      }
+
+      .calculate-btn {
+        padding: 0.5rem;
+        margin-top: 1rem;
+        background-color: #0088cc;
+        border: none;
+        color: white;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      @media screen and (min-width: 760px) {
+        .grid-container {
+          display: grid;
+          margin-bottom: 30px;
+          grid-template-rows: 1fr 1fr 1fr 1fr;
+          grid-template-columns: 1.2fr 1fr 1fr;
+          grid-gap: 0.5rem;
+          grid-template-areas:
+            "form show-flc show-ampacity"
+            "form show-vd show-ampacity"
+            "form show-vd suggestion"
+            "form show-vd suggestion";
+        }
+
+        .form-control,
+        select {
+          width: 300px;
+        }
+
+        .calculate-btn {
+          width: 300px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="section section-center">
+      <h3>VOLTAGE DROP AND CABLE SIZE SELECTOIN CALCULATION</h3>
+      <p>Cable data is from Tai Sin Cable Catalogue 2018 version Singapore</p>
+      <p>
+        Table B1.7: Single-core 90°C XLPE / Cross-Linked LSZH / EPR insulated,
+        armoured (non-magnetic armour), thermoplastic (PVC / LSZH) sheathed
+        cables Ambient air temperature: 30°C, Ground ambient temperature: 15°C,
+        Soil thermal resistivity (cable buried in ground): 1.2K.m/W
+      </p>
+      <p>
+        Table B2.7: Single-core 90°C XLPE / Cross-Linked LSZH / EPR insulated,
+        armoured (non-magnetic armour), thermoplastic (PVC / LSZH) sheathed
+        cables Ambient temperature: 30°C, Conductor operating temperature: 90°C
+      </p>
+      <p>
+        Assuming, Installation method is flat-touching in free air or on a
+        perforated cable tray.
+      </p>
+    </section>
+
+    <section class="section-center">
+      <div class="grid-container">
+        <form id="calculation-form">
+          <!-- LOAD INPUT GROUP -->
+          <div class="form-group">
+            <label for="load-rating">Load Rating (kW, kVA, hp, & A)</label>
+            <div style="display: flex">
+              <input
+                type="number"
+                class="form-control"
+                name="load-rating"
+                id="load-rating"
+                value="20"
+              />
+              <select
+                id="load-rating-option"
+                style="margin-left: 1rem; width: 70px"
+              >
+                <option value="kW" selected>kW</option>
+                <option value="kVA">kVA</option>
+                <option value="hp">hp</option>
+                <option value="A">A</option>
+              </select>
+            </div>
+          </div>
+          <!-- END OF LOAD INPUT GROUP -->
+
+          <!-- POWER FACTOR GROUP -->
+          <div class="form-group power-factor">
+            <label for="power-factor">Power Factor</label>
+
+            <input
+              type=""
+              class="form-control"
+              name="power-factor"
+              id="power-factor"
+              value="0.85"
+            />
+          </div>
+          <!-- END OF POWER FACTOR  GROUP -->
+
+          <!-- VOLTAGE GROUP -->
+          <div class="form-group">
+            <label for="" class="form-label">Voltage Rating (3 Phase)</label>
+            <select class="form-select" id="voltage-rating">
+              <!-- <option selected>Select the Transformer Rating</option> -->
+              <option value="390">390V</option>
+              <option value="395">395V</option>
+              <option value="400" selected>400V</option>
+              <option value="415">415V</option>
+              <option value="420">420V</option>
+              <option value="425">425V</option>
+            </select>
+          </div>
+          <!--END OF  VOLTAGE GROUP -->
+
+          <!-- CABLE SIZE GROUP -->
+          <div class="form-group">
+            <label for="" class="form-label"><b>Select Cable Size</b></label>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              id="cable-rating"
+            >
+              <!-- <option selected>Select the Transformer Rating</option> -->
+              <option value="50">50sqmm</option>
+              <option value="70">70sqmm</option>
+              <option value="95">95sqmm</option>
+              <option value="120">120sqmm</option>
+              <option value="150">150sqmm</option>
+              <option value="185">185sqmm</option>
+              <option value="240">240sqmm</option>
+              <option value="300">300sqmm</option>
+              <option value="400">400sqmm</option>
+              <option value="500">500sqmm</option>
+              <option value="630">630sqmm</option>
+              <option value="800">800sqmm</option>
+              <option value="1000">1000sqmm</option>
+            </select>
+          </div>
+          <!--END OF  CABLE SIZE GROUP -->
+
+          <!-- CABLE SET -->
+          <div class="form-group">
+            <label for="" class="form-label"><b>Nos. of Cable Set</b></label>
+            <select class="form-select" aria-label="" id="cable-set">
+              <!-- <option selected>Select the Transformer Rating</option> -->
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <!--END OF CABLE SET -->
+
+          <!--TUNNEL LENGTH -->
+          <div class="form-group">
+            <label for="" class="form-label"><b>Distance to Load (m)</b></label>
+            <input
+              type="number"
+              class="form-control"
+              id="distance-to-load"
+              value="10"
+            />
+          </div>
+          <!--END OF TUNNEL LENGTH -->
+
+          <!-- CALCULATE BUTTON -->
+          <div class="form-group">
+            <button
+              type="submit"
+              class="calculate-btn"
+              style="margin-top: 20px"
+            >
+              Calculate
+            </button>
+          </div>
+        </form>
+
+        <!-- END OF CALCULATE BUTTON -->
+
+        <div class="" id="show-flc"></div>
+        <div class="" id="show-ampacity"></div>
+        <div class="" id="show-vd"></div>
+        <div class="" id="suggestion"></div>
+      </div>
+    </section>
+
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script> -->
+
+    <!-- <script src="../utils/cable.js"></script> -->
+    <script
+      type="module"
+      src="../js/volt-drop-&-cable-size-calculator.js"
+    ></script>
+  </body>
+</html>

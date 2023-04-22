@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Current Calculator | by KMO</title>
+
+    <style>
+      .form {
+        width: 100%;
+        background-color: white;
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+
+      .form-group {
+        margin: 1rem;
+        background-color: white;
+      }
+
+      label {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+        font-weight: 700;
+      }
+
+      input,
+      select {
+        width: 100%;
+        height: 35px;
+        border: 1px solid black;
+        /* font-size: 1rem; */
+        padding-left: 0.5rem;
+        border-radius: 0.3rem;
+      }
+
+      .btn-calculate {
+        padding: 0.5rem;
+        margin-top: 1rem;
+        background-color: #0088cc;
+        border: none;
+        color: white;
+        border-radius: 0.2rem;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      .btn-calculate:hover {
+        box-shadow: 1px 1px #888888;
+      }
+
+      .result {
+        /* background-color: white; */
+        padding: 0.8rem;
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        width: 100%;
+      }
+
+      @media screen and (min-width: 746px) {
+        .form {
+          width: 400px;
+        }
+        .result {
+          width: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- title -->
+    <section class="section section-center">
+      <h3>Current Calculator</h3>
+      <p>
+        Enter Power (kW or kVA) and Voltage. Click calculate button to get the
+        ampere.
+      </p>
+    </section>
+    <!-- end of title -->
+
+    <!-- calculator form -->
+    <section class="section-center">
+      <form class="form">
+        <!-- power input-->
+        <div class="form-group">
+          <label style="display: block">Power (kW or kVA):</label>
+
+          <div style="display: flex">
+            <input type="number" placeholder="" class="power" value="50" />
+
+            <select
+              name=""
+              class="select-power"
+              style="width: 75px; margin-left: 1rem"
+            >
+              <option value="kw">kW</option>
+              <option value="kva">kVA</option>
+            </select>
+          </div>
+        </div>
+        <!-- end of power input -->
+
+        <!-- voltage input -->
+        <div class="form-group">
+          <label style="display: block">Voltage:</label>
+          <input
+            type="number"
+            placeholder="Type voltage"
+            class="voltage"
+            value="400"
+          />
+        </div>
+        <!-- end of voltage input -->
+
+        <!-- single/three phase input -->
+        <div class="form-group">
+          <label style="display: block">Single or Three Phase:</label>
+
+          <select name="" class="select-phase phase">
+            <option value="three-phase">Three Phase</option>
+            <option value="single-phase">Single Phase</option>
+          </select>
+        </div>
+        <!-- end of single/three phase input -->
+
+        <!-- power factor input -->
+        <div class="form-group power-factor">
+          <label style="display: block">PF:</label>
+          <input type="number" placeholder="" value="0.85" class="pf" />
+        </div>
+        <!-- enf of power factor input -->
+
+        <!-- btn -->
+        <div class="form-group">
+          <button class="btn-calculate">Calculate</button>
+        </div>
+        <!-- end of btn -->
+      </form>
+
+      <!-- result -->
+      <div class="result"></div>
+      <!-- end of result -->
+    </section>
+
+    <!-- javascript starts here -->
+    <script>
+      const calculateBtnDOM = document.querySelector(".btn-calculate");
+      const powerFactorInputDOM = document.querySelector(".power-factor");
+      const resultDOM = document.querySelector(".result");
+
+      // click calculate button
+      calculateBtnDOM.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const data = getFormData();
+        const { power, voltage, phase, pf } = data;
+
+        if (power === 0 || voltage === 0) {
+          alert("fields cannot be empty");
+          return;
+        }
+
+        const result = getCurrent(power, voltage, phase, pf).toFixed(2);
+
+        resultDOM.style.padding = "20px";
+        resultDOM.style.borderRadius = "20px";
+        resultDOM.style.color = "#3E5E66";
+        resultDOM.style.border = "1px solid #3E5E66";
+
+        resultDOM.innerHTML = `Current is ${result}A`;
+      });
+
+      // toggle power factor input based on kW or kVA
+      const kW_kVA = document.querySelector(".select-power");
+      kW_kVA.addEventListener("change", () => {
+        kW_kVA.value === "kva"
+          ? (powerFactorInputDOM.style.display = "none")
+          : (powerFactorInputDOM.style.display = "block");
+      });
+
+      // get form data, return as an object
+      const getFormData = () => {
+        const power = document.querySelector(".power");
+        const voltage = document.querySelector(".voltage");
+        const phase = document.querySelector(".phase");
+        const pf = document.querySelector(".pf");
+        return {
+          power: Number(power.value),
+          voltage: Number(voltage.value),
+          phase: phase.value,
+          pf: kW_kVA.value === "kva" ? 1 : Number(pf.value),
+        };
+      };
+
+      // get current calculation
+      const getCurrent = (power, voltage, phase, pf) => {
+        if (phase === "single-phase") {
+          return (current = (power * 1000) / (voltage * pf));
+        } else {
+          return (current = (power * 1000) / (1.732 * voltage * pf));
+        }
+      };
+    </script>
+  </body>
+</html>

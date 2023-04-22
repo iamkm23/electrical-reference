@@ -1,0 +1,375 @@
+/* hero */
+.hero {
+  background-color: #07457e;
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+      rgba(10, 73, 199, 0.757),
+      rgba(218, 169, 169, 0.7)
+    ),
+    url(https://www.mybusiness.com.au/content/nswbc/ba/en/home/resources/news/power-stations-allegedly-targeted-by-chinese-criminals/_jcr_content/root/responsivegrid/layoutcontainer/image.coreimg.png/1639016682424/hero-small-eclectricity-wires.png)
+      center/cover no-repeat;
+  position: relative;
+  z-index: -1;
+}
+
+/* end of hero */
+
+/* hero2 */
+.hero2 {
+  background-color: rgb(220, 217, 217);
+  padding: 1.2rem 0px;
+}
+.hero2 h5 {
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.hero2 a {
+  color: black;
+}
+/* end of hero2 */
+
+/*
+=============== 
+Navbar
+===============
+*/
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  background-color: #07457e;
+  position: sticky;
+  top: 0px;
+  box-shadow: 1px 4px 14px 4px rgba(84, 75, 75, 0.56);
+  -webkit-box-shadow: 1px 4px 14px 4px rgba(84, 75, 75, 0.56);
+  -moz-box-shadow: 1px 4px 14px 4px rgba(84, 75, 75, 0.56);
+}
+
+.nav-center {
+  width: 90vw;
+  max-width: var(--max-width);
+  /* background-color: aqua; */
+}
+
+.nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3rem;
+  /* background-color: antiquewhite; */
+}
+
+.logo {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.toggle-btn {
+  font-size: 1.5rem;
+  padding: 0 5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.show-nav-links {
+  display: flex;
+  height: auto;
+  align-items: center;
+  flex-direction: column;
+  /* background-color: beige; */
+}
+
+.nav-link {
+  text-decoration: none;
+  text-transform: capitalize;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  height: 2rem;
+}
+
+.nav-link:hover {
+  color: rgb(109, 109, 150);
+}
+
+.active {
+  color: rgb(201, 111, 149);
+  font-weight: 700;
+}
+
+@media screen and (min-width: 768px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+  .toggle-btn {
+    display: none;
+  }
+  .navbar {
+    height: 4rem;
+  }
+  .nav-center {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-header {
+    margin-right: auto;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    height: auto;
+    flex-direction: row;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    padding: 0;
+    font-size: 1.1rem;
+  }
+}
+
+/*
+=============== 
+End of Navbar
+===============
+*/
+
+/*
+=============== 
+Calculators Page
+===============
+*/
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 90vw;
+  max-width: var(--max-width);
+  margin: 50px auto;
+  grid-gap: 20px;
+}
+
+.grid-item {
+  background-color: white;
+  height: 200px;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.grid-item a img {
+  margin-top: 10px;
+}
+
+.grid-item h5 {
+  font-size: 0.85rem;
+}
+
+@media screen and (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/*
+=============== 
+End of Calculators Page
+===============
+*/
+
+/*
+=============== 
+Download Page
+===============
+*/
+/* FILTER BUTTON*/
+.btn-container {
+  margin-top: 20px;
+
+  /* grid-template-columns: 120px 120px 120px;
+  grid-template-rows: 12px 12px 12px; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* .btn-container-center {
+  margin: auto;
+  justify-content: center;
+} */
+
+.btn-filter {
+  background-color: rgb(214, 212, 212);
+  padding: 5px 10px;
+  border-radius: 0.3rem;
+  border: none;
+  margin: 2px 2px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.btn-filter:hover {
+  background: linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+}
+
+.active-btn {
+  background-color: #70b0e7;
+}
+
+/* END OF FILTER BUTTON */
+
+.grid-books {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  width: 90vw;
+  max-width: var(--max-width);
+  margin: 2rem auto;
+  grid-gap: 20px;
+}
+
+.grid-book {
+  /* background-color: white; */
+  text-align: center;
+  padding: 7px;
+}
+
+.grid-book p {
+  font-size: 0.8rem;
+  margin: 0.1rem;
+}
+
+.grid-book img {
+  height: 150px;
+  border: 0.5px solid #67708b;
+}
+
+.grid-book h5 {
+  font-size: 0.85rem;
+  margin: 0.1rem;
+}
+
+.author {
+  color: rgb(55, 87, 204);
+  /* border-radius: 5px; */
+  /* font-family: "Times New Roman", Times, serif; */
+  font-weight: 700;
+  font-style: italic;
+}
+
+@media screen and (min-width: 768px) {
+  .grid-books {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .grid-books {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .grid-books {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/*
+=============== 
+End of Download Page
+===============
+*/
+
+/*
+=============== 
+About Page
+===============
+*/
+.about {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  font-family: "Source Code Pro", monospace;
+}
+.about h4,
+.abiout h5 {
+  align-self: center;
+}
+
+.avator-img {
+  width: 150px;
+  border-radius: 50%;
+  margin: 2rem;
+  background-color: black;
+}
+/*
+=============== 
+End of About Page
+===============
+*/
+
+/*
+=============== 
+Footer
+===============
+*/
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  background-color: #07457e;
+  color: white;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.terms-of-use a,
+.contact a {
+  padding: 0px 0.5rem;
+  color: white;
+}
+/*
+=============== 
+End of Footer
+===============
+*/
